@@ -1,5 +1,8 @@
 import tkinter as tk
 from keypad import Keypad
+from calculator_model import CalculatorModel
+from display_component import DisplayComponent
+from calculator_controller import CalculatorController
 
 
 class CalculatorUI(tk.Tk):
@@ -11,14 +14,19 @@ class CalculatorUI(tk.Tk):
         self.operator = operator_pad
         self.operator2 = operator_pad2
         self.advance = advance_pad
+
+        self.model = CalculatorModel()
+        self.display = DisplayComponent()
+        self.display_var = tk.StringVar()
+        self.controller = CalculatorController(self.model, self.display, self.display_var)
         self.init_component()
+        self.display_var.set("0")
 
     def init_component(self):
         """init component"""
         # define
         padding = {"padx": 5, "pady": 5}
-        self.display_var = tk.StringVar()
-        self.display = self.make_display(0)
+        self.display = self.make_display("0")
         group1 = tk.Frame(self)
 
         key_frame = Keypad(group1, keynames=self.num_pad, columns=3)
@@ -57,6 +65,7 @@ class CalculatorUI(tk.Tk):
         operator2_frame.bind('<Button>', self.handle_press)
         advance_frame.bind('<Button>', self.handle_press)
 
+
     def make_display(self, text):
         """make display flied"""
         frame = tk.Frame(self)
@@ -69,11 +78,10 @@ class CalculatorUI(tk.Tk):
         return frame
 
     def handle_press(self, event):
-        """event handler that return the button name"""
-        text = event.widget["text"]
-        print(text)  # delete when submit
-        self.display_var.set(text)
-        return text
+        """Handle button press"""
+        key = event.widget["text"]
+        print("Pressed key:", key)
+        self.controller.handle_input(key)
 
     def run(self):
         """run the script"""

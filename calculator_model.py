@@ -1,0 +1,20 @@
+"""calculator_model.py"""
+
+
+class CalculatorModel:
+    def __init__(self):
+        self.history = []
+
+    def evaluate_expression(self, expression):
+        try:
+            result = eval(expression)
+            self.history.append((expression, result))
+            return result
+        except Exception as e:
+            return None
+
+    def clear_history(self):
+        self.history = []
+
+    def get_history(self):
+        return self.history
