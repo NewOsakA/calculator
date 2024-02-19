@@ -14,7 +14,6 @@ class CalculatorController:
 
     def handle_input(self, key):
         """handle the user input case by case"""
-
         if key.isdigit():
             self.display.append_to_expression(key)
             self.display.last_input = "operand"
@@ -22,6 +21,7 @@ class CalculatorController:
             self.display.append_to_expression(key)
             self.display.last_input = "operator"
         elif key == "=":
+            # try if the expression is valid
             try:
                 expression = self.display.get_expression()
                 expression = expression.replace('^', '**')
@@ -69,13 +69,11 @@ class CalculatorController:
                 else:
                     self.display.append_to_expression(str(result))
                 self.ui.update_history_comboboxes()
+            # if not, set color to red, play the error sound
             except Exception:
-                # Change the color of the display and play the error sound
                 self.play_sound()
                 self.ui.display_label.config(fg="red")
                 self.ui.after(2000, self.ui.restore_display_color)
-
-
 
         elif key == "DEL":  # delete button
             self.display.delete_last()
