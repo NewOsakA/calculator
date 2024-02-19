@@ -14,6 +14,7 @@ class CalculatorController:
 
     def handle_input(self, key):
         """handle the user input case by case"""
+
         if key.isdigit():
             self.display.append_to_expression(key)
             self.display.last_input = "operand"
@@ -21,49 +22,43 @@ class CalculatorController:
             self.display.append_to_expression(key)
             self.display.last_input = "operator"
         elif key == "=":
-            expression = self.display.get_expression()
-            expression = expression.replace('^', '**')
-            original = expression
-            if "sqrt" in expression:
-                expression = expression.replace("sqrt", "math.sqrt")
-                result = eval(expression)
-                self.model.history.append((original, result))
-            elif "log10" in expression:
-                expression = expression.replace("log10", "math.log10")
-                result = eval(expression)
-                self.model.history.append((original, result))
-            elif "log2" in expression:
-                expression = expression.replace("log2", "math.log2")
-                result = eval(expression)
-                self.model.history.append((original, result))
-            elif "ln" in expression:
-                expression = expression.replace("ln", "math.log")
-                result = eval(expression)
-                self.model.history.append((original, result))
-            elif "exp" in expression:
-                expression = expression.replace("exp", "math.exp")
-                result = eval(expression)
-                self.model.history.append((original, result))
-            elif "mod" in expression:
-                expression = expression.replace("mod", "%")
-                result = eval(expression)
-                self.model.history.append((original, result))
-            else:
-                result = self.model.evaluate_expression(expression)
+            try:
+                expression = self.display.get_expression()
+                expression = expression.replace('^', '**')
+                original = expression
+                if "sqrt" in expression:
+                    expression = expression.replace("sqrt", "math.sqrt")
+                    result = eval(expression)
+                    self.model.history.append((original, result))
+                elif "log10" in expression:
+                    expression = expression.replace("log10", "math.log10")
+                    result = eval(expression)
+                    self.model.history.append((original, result))
+                elif "log2" in expression:
+                    expression = expression.replace("log2", "math.log2")
+                    result = eval(expression)
+                    self.model.history.append((original, result))
+                elif "ln" in expression:
+                    expression = expression.replace("ln", "math.log")
+                    result = eval(expression)
+                    self.model.history.append((original, result))
+                elif "exp" in expression:
+                    expression = expression.replace("exp", "math.exp")
+                    result = eval(expression)
+                    self.model.history.append((original, result))
+                elif "mod" in expression:
+                    expression = expression.replace("mod", "%")
+                    result = eval(expression)
+                    self.model.history.append((original, result))
+                else:
+                    result = self.model.evaluate_expression(expression)
 
-            if result is not None:
-                self.display.clear()
-                self.display.append_to_expression(str(result))
+                if result is not None:
+                    self.display.clear()
+                    self.display.append_to_expression(str(result))
 
-            self.display.last_input = "operand"
+                self.display.last_input = "operand"
 
-            # Check if the expression was valid
-            if result is None:
-                # Change the color of the display and play the error sound
-                self.play_sound()
-                self.ui.display_label.config(fg="red")
-                self.ui.after(2000, self.ui.restore_display_color)
-            else:
                 # Update history expression and result
                 self.ui.history_expression_var.set(self.model.history[-1][0])
                 self.ui.history_result_var.set(self.model.history[-1][-1])
@@ -74,6 +69,13 @@ class CalculatorController:
                 else:
                     self.display.append_to_expression(str(result))
                 self.ui.update_history_comboboxes()
+            except Exception:
+                # Change the color of the display and play the error sound
+                self.play_sound()
+                self.ui.display_label.config(fg="red")
+                self.ui.after(2000, self.ui.restore_display_color)
+
+
 
         elif key == "DEL":  # delete button
             self.display.delete_last()
