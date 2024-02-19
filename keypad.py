@@ -4,7 +4,7 @@ import tkinter as tk
 
 class Keypad(tk.Frame):
     """construct keypad that can configure"""
-    def __init__(self, parent, keynames=None, columns=1, button_width=5, button_height=2, **kwargs):
+    def __init__(self, parent, keynames=None, columns=1, button_width=1, button_height=2, **kwargs):
         super().__init__()
         if keynames is None:
             keynames = []

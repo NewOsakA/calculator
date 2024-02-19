@@ -1,5 +1,6 @@
 """calculator_controller.py"""
 import math
+import pygame
 
 
 class CalculatorController:
@@ -56,13 +57,12 @@ class CalculatorController:
 
             # Check if the expression was valid
             if result is None:
-                # Change the color of the display and make a sound for invalid expression
+                # Change the color of the display and play the error sound
+                self.play_sound()
                 self.ui.display_label.config(fg="red")
-                # Make a sound (customize based on your needs)
                 self.ui.after(2000, self.ui.restore_display_color)
             else:
                 # Update history expression and result
-                print(f"History list: {self.model.history}")
                 self.ui.history_expression_var.set(self.model.history[-1][0])
                 self.ui.history_result_var.set(self.model.history[-1][-1])
                 # Update the display
@@ -140,4 +140,9 @@ class CalculatorController:
 
         self.display_var.set(self.display.get_expression())
 
-
+    @staticmethod
+    def play_sound():
+        """play an error sound effect"""
+        pygame.mixer.init()
+        pygame.mixer.music.load("error_sound.wav")
+        pygame.mixer.music.play()
