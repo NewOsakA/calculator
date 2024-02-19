@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 from keypad import Keypad
 from calculator_model import CalculatorModel
 from display_component import DisplayComponent
@@ -18,6 +19,7 @@ class CalculatorUI(tk.Tk):
         self.model = CalculatorModel()
         self.display = DisplayComponent()
         self.display_var = tk.StringVar()
+        self.history_var = tk.StringVar()
         self.controller = CalculatorController(self.model, self.display, self.display_var)
         self.init_component()
         self.display_var.set("0")
@@ -26,16 +28,24 @@ class CalculatorUI(tk.Tk):
         """init component"""
         # define
         padding = {"padx": 5, "pady": 5}
-        self.display = self.make_display("0")
+        option = {"font": ("Arial", 30)}
+        self.display_frame = self.make_display("0")
         group1 = tk.Frame(self)
 
-        key_frame = Keypad(group1, keynames=self.num_pad, columns=3)
-        operator_frame = Keypad(self, keynames=self.operator, columns=1)
-        operator2_frame = Keypad(group1, keynames=self.operator2, columns=3)
-        advance_frame = Keypad(self, keynames=self.advance, columns=1)
+        self.history_combobox = ttk.Combobox(self.display_frame, textvariable=self.history_var, **option)
+        self.history_combobox.grid(row=1, column=0, columnspan=3, **padding, sticky=tk.NSEW)
+        style = ttk.Style()
+        style.theme_use('clam')
+        style.configure("History.TCombobox", fg="blue", bg="lightgray")
+        self.history_combobox.config(style="History.TCombobox")
+
+        key_frame = Keypad(group1, keynames=self.num_pad, columns=3, button_width=1, button_height=2)
+        operator_frame = Keypad(self, keynames=self.operator, columns=1, button_width=1, button_height=2)
+        operator2_frame = Keypad(group1, keynames=self.operator2, columns=3, button_width=1, button_height=2)
+        advance_frame = Keypad(self, keynames=self.advance, columns=2, button_width=1, button_height=2)
 
         # layout and config
-        self.display.grid(row=0, column=0, columnspan=3, **padding, sticky=tk.NSEW)
+        self.display_frame.grid(row=0, column=0, columnspan=3, **padding, sticky=tk.NSEW)
         key_frame.grid(row=2, column=0, **padding, sticky=tk.NSEW)
         operator_frame.grid(row=1, column=1, **padding, sticky=tk.NSEW, rowspan=2)
         operator2_frame.grid(row=1, column=0, **padding, sticky=tk.NSEW)
@@ -64,7 +74,6 @@ class CalculatorUI(tk.Tk):
         operator_frame.bind('<Button>', self.handle_press)
         operator2_frame.bind('<Button>', self.handle_press)
         advance_frame.bind('<Button>', self.handle_press)
-
 
     def make_display(self, text):
         """make display flied"""
