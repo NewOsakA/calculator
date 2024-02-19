@@ -9,7 +9,7 @@ class CalculatorModel:
         try:
             result = eval(expression)
             self.history.append((expression, result))
-            return result
+            return expression, result
         except Exception as e:
             return None
 
