@@ -142,8 +142,7 @@ class CalculatorController:
 
         self.display_var.set(self.display.get_expression())
 
-    @staticmethod
-    def play_sound():
+    def play_sound(self):
         """play an error sound effect"""
         pygame.mixer.init()
         pygame.mixer.music.load("error_sound.wav")

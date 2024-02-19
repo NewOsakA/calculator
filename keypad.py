@@ -62,9 +62,3 @@ class Keypad(tk.Frame):
     def frame(self):
         """returns a reference to  the superclass object for this keypad"""
         return self
-
-
-def handle_press(event):
-    """event handler that return the button name"""
-    text = event.widget["text"]
-    return text
