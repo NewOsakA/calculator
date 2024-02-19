@@ -2,33 +2,29 @@
 import tkinter as tk
 from tkinter import ttk
 from keypad import Keypad
-from calculator_model import CalculatorModel
-from display_component import DisplayComponent
-from calculator_controller import CalculatorController
 
 
 class CalculatorUI(tk.Tk):
     """Calculator UI"""
-    def __init__(self, num_pad, operator_pad, operator_pad2, advance_pad):
+    def __init__(self, keys_dict, model, display):
         super().__init__()
         self.title("Calculator")
-        self.num_pad = num_pad
-        self.operator = operator_pad
-        self.operator2 = operator_pad2
-        self.advance = advance_pad
-
-        self.model = CalculatorModel()
-        self.display = DisplayComponent()
+        self.keys_dict = keys_dict
+        self.model = model
+        self.display = display
+        self.controller = None  # get injected later
         self.display_var = tk.StringVar()
         self.history_expression_var = tk.StringVar()
         self.history_result_var = tk.StringVar()
-        # self.display_frame = self.make_display("0")
-        self.controller = CalculatorController(self.model, self.display, self.display_var, self)
         self.init_component()
 
     def init_component(self):
         """init component"""
         # define
+        keys = self.keys_dict.get('keys', [])
+        operator = self.keys_dict.get('operator', [])
+        operator2 = self.keys_dict.get('operator2', [])
+        advance = self.keys_dict.get('advance', [])
         padding = {"padx": 5, "pady": 5}
         size = {"width": 10, "height": 1}
         option1 = {"font": ("Arial", 30), "bg": "black", "fg": "yellow"}
@@ -51,10 +47,10 @@ class CalculatorUI(tk.Tk):
 
         # button
         group1 = tk.Frame(self)
-        key_frame = Keypad(group1, keynames=self.num_pad, columns=3)
-        operator_frame = Keypad(self, keynames=self.operator, columns=1)
-        operator2_frame = Keypad(group1, keynames=self.operator2, columns=3)
-        advance_frame = Keypad(self, keynames=self.advance, columns=2)
+        key_frame = Keypad(group1, keynames=keys, columns=3)
+        operator_frame = Keypad(self, keynames=operator, columns=1)
+        operator2_frame = Keypad(group1, keynames=operator2, columns=3)
+        advance_frame = Keypad(self, keynames=advance, columns=2)
 
         # layout and config
         self.display_frame.grid_columnconfigure(0, weight=1)

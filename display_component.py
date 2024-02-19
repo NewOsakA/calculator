@@ -7,6 +7,7 @@ class DisplayComponent:
         self.last_input = None
 
     def append_to_expression(self, value):
+        """append expression to the display"""
         # Update last input state based on the type of input
         if value.isdigit():
             self.last_input = "operand"
@@ -22,6 +23,7 @@ class DisplayComponent:
             self.expression += value
 
     def delete_last(self):
+        """delete last digit or function"""
         if self.last_input == "function":
             # Find the index of the last occurrence of a function
             last_function_index = max(
@@ -54,8 +56,10 @@ class DisplayComponent:
                     self.last_input = "function"
 
     def clear(self):
+        """clear the display and set it to 0"""
         self.expression = "0"
         self.last_input = None
 
     def get_expression(self):
+        """get the current expression"""
         return self.expression

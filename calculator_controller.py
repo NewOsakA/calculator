@@ -4,6 +4,7 @@ import pygame
 
 
 class CalculatorController:
+    """handle the user input"""
     def __init__(self, model, display, display_var, ui):
         self.model = model
         self.display = display
@@ -12,6 +13,7 @@ class CalculatorController:
         self.last_input = ""
 
     def handle_input(self, key):
+        """handle the user input case by case"""
         if key.isdigit():
             self.display.append_to_expression(key)
             self.display.last_input = "operand"
